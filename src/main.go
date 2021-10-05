@@ -10,7 +10,6 @@ import (
 var clients = make(map[*websocket.Conn]bool)
 var broadcast = make(chan Message)
 
-// Configure the upgrader
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
@@ -23,11 +22,10 @@ type Message struct {
 }
 
 func main() {
-	// Create a simple file server
+
 	fs := http.FileServer(http.Dir("../view"))
 	http.Handle("/", fs)
 
-	// Configure websocket route
 	http.HandleFunc("/ws", handleConnections)
 
 	// Start listening for incoming chat messages
@@ -42,7 +40,7 @@ func main() {
 }
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
-	// Upgrade initial GET request to a websocket
+
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Fatal(err)
